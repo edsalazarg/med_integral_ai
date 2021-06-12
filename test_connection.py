@@ -21,5 +21,7 @@ mydb = mysql.connector.connect(
 
 mycursor = mydb.cursor()
 
-sql = "SHOW DATABASES;"
-print(mycursor.execute(sql))
+databases = ("show databases")
+mycursor.execute(databases)
+print(mycursor)
+
