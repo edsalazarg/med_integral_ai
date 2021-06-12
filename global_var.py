@@ -1,0 +1,3 @@
+USERNAME = "virtual"
+PASSWORD = ""
+SERVER = "192.168.100.193"
