@@ -3,9 +3,10 @@ import pandas as pd
 import pickle
 from sklearn.preprocessing import MinMaxScaler, LabelEncoder
 import mysql.connector
+import global_var as gv
 
 
-db_connection_str = 'mysql+pymysql://root@localhost/medintegral'
+db_connection_str = 'mysql+pymysql://{}@{}/medintegral'.format(gv.USERNAME,gv.SERVER)
 db_connection = create_engine(db_connection_str)
 
 df = pd.read_sql('SELECT * FROM view_psych_ai', con=db_connection)
@@ -144,9 +145,9 @@ df_pred.insert(0, "patient_id", patients_ids, True)
 
 
 mydb = mysql.connector.connect(
-  host="localhost",
-  user="root",
-  password="",
+  host=gv.SERVER,
+  user=gv.USERNAME,
+  password=gv.PASSWORD,
   database="medintegral"
 )
 

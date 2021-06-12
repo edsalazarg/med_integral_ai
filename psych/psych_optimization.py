@@ -17,6 +17,7 @@ from sklearn.metrics import accuracy_score
 from sklearn import svm
 from sklearn.preprocessing import MinMaxScaler
 import pickle
+import global_var as gv
 
 class Psych_AI:
     def __init__(self, dataframe, population=20, prob_crsvr=1, prob_mutation=0.3, generations=1000):
@@ -398,33 +399,34 @@ class Psych_AI:
 
 train_df = pd.read_csv('first_csvs/psych.csv')
 
-db_connection_str = 'mysql+pymysql://root@localhost/medintegral'
+db_connection_str = 'mysql+pymysql://{}@{}/medintegral'.format(gv.USERNAME,gv.SERVER)
 db_connection = create_engine(db_connection_str)
 
 df = pd.read_sql('SELECT * FROM view_psych_ai_reviewed', con=db_connection)
 
-for item in df:
-    try:
-        df[item].replace({"Si": "Yes",
-                          "Algunas veces": "Sometimes",
-                          "Nunca": "Never",
-                          "Frecuentemente": "Often",
-                          "Raramente": "Rarely",
-                          "No estoy seguro": "Not sure",
-                          "No se": "Don't know",
-                          "Muy dificil": "Very difficult",
-                          "Algo Dificl": "Somewhat difficult",
-                          "Algo Facil": "Somewhat easy",
-                          "Muy facil": "Very easy",
-                          "Algunos de ellos": "Some of them",
-                          "A lo mejor": "Maybe"
-                          },inplace=True)
-    except TypeError:
-        continue
+if df.__len__() > 0:
+    for item in df:
+        try:
+            df[item].replace({"Si": "Yes",
+                              "Algunas veces": "Sometimes",
+                              "Nunca": "Never",
+                              "Frecuentemente": "Often",
+                              "Raramente": "Rarely",
+                              "No estoy seguro": "Not sure",
+                              "No se": "Don't know",
+                              "Muy dificil": "Very difficult",
+                              "Algo Dificl": "Somewhat difficult",
+                              "Algo Facil": "Somewhat easy",
+                              "Muy facil": "Very easy",
+                              "Algunos de ellos": "Some of them",
+                              "A lo mejor": "Maybe"
+                              },inplace=True)
+        except TypeError:
+            continue
 
-test_df = pd.concat([train_df, df], ignore_index=True, sort=False)
+    test_df = pd.concat([train_df, df], ignore_index=True, sort=False)
 
-# objpo = Psych_AI(train_df,generations=100)
+    objpo = Psych_AI(train_df,generations=1000)
 
 
 
