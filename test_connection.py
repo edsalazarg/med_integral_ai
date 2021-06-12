@@ -20,8 +20,8 @@ mydb = mysql.connector.connect(
 )
 
 mycursor = mydb.cursor()
-
 databases = ("show databases")
 mycursor.execute(databases)
-print(mycursor)
+l = mycursor.fetchall()
+print(l)
 
