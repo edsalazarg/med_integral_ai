@@ -22,6 +22,4 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor()
 
 sql = "SHOW DATABASES;"
-mycursor.execute(sql)
-
-print(sql)
+print(mycursor.execute(sql))
