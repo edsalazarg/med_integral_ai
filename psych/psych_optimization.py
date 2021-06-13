@@ -12,10 +12,9 @@ from sqlalchemy import create_engine
 import time
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-from sklearn import preprocessing
 from sklearn.metrics import accuracy_score
 from sklearn import svm
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import LabelEncoder
 import pickle
 import global_var as gv
 
@@ -33,113 +32,43 @@ class Psych_AI:
         # leemos los datos
         train_df = self.dataframe
 
-        # Revolvemos los datos
-        train_df = train_df.drop(['comments'], axis=1)
-        train_df = train_df.drop(['state'], axis=1)
-        train_df = train_df.drop(['Timestamp'], axis=1)
+        train_df.drop(columns=['Timestamp', 'Country', 'state', 'comments'], inplace=True)
+
+        train_df.drop(train_df[train_df['Age'] < 0].index, inplace=True)
+        train_df.drop(train_df[train_df['Age'] > 100].index, inplace=True)
+        train_df['Age'].unique()
 
         train_df.isnull().sum().max()
 
-        defaultInt = 0
-        defaultString = 'NaN'
-        defaultFloat = 0.0
+        train_df['Gender'].replace(['Male ', 'male', 'M', 'm', 'Male', 'Cis Male',
+                                    'Man', 'cis male', 'Mail', 'Male-ish', 'Male (CIS)',
+                                    'Cis Man', 'msle', 'Malr', 'Mal', 'maile', 'Make', ], 'male', inplace=True)
 
-        # Creamos una lista con los tipos de datos
-        intFeatures = ['Age']
-        stringFeatures = ['Gender', 'Country', 'self_employed', 'family_history', 'treatment', 'work_interfere',
-                          'no_employees', 'remote_work', 'tech_company', 'anonymity', 'leave',
-                          'mental_health_consequence',
-                          'phys_health_consequence', 'coworkers', 'supervisor', 'mental_health_interview',
-                          'phys_health_interview',
-                          'mental_vs_physical', 'obs_consequence', 'benefits', 'care_options', 'wellness_program',
-                          'seek_help']
-        floatFeatures = []
+        train_df['Gender'].replace(['Female ', 'female', 'F', 'f', 'Woman', 'Female',
+                                    'femail', 'Cis Female', 'cis-female/femme', 'Femake', 'Female (cis)',
+                                    'woman', ], 'female', inplace=True)
 
-        # Limpiamos de NaNs los datos
-        for feature in train_df:
-            if feature in intFeatures:
-                train_df[feature] = train_df[feature].fillna(defaultInt)
-            elif feature in stringFeatures:
-                train_df[feature] = train_df[feature].fillna(defaultString)
-            elif feature in floatFeatures:
-                train_df[feature] = train_df[feature].fillna(defaultFloat)
-            else:
-                print('Error: Feature %s not recognized.' % feature)
+        train_df["Gender"].replace(['Female (trans)', 'queer/she/they', 'non-binary',
+                                    'fluid', 'queer', 'Androgyne', 'Trans-female', 'male leaning androgynous',
+                                    'Agender', 'A little about you', 'Nah', 'All',
+                                    'ostensibly male, unsure what that really means',
+                                    'Genderqueer', 'Enby', 'p', 'Neuter', 'something kinda male?',
+                                    'Guy (-ish) ^_^', 'Trans woman', ], 'other', inplace=True)
 
-        # Limpiamos 'Gender'
-        # Slower case all columm's elements
-        gender = train_df['Gender'].str.lower()
-        # print(gender)
-
-        # Select unique elements
-        gender = train_df['Gender'].unique()
-
-        # Made gender groups
-        male_str = ["male", "m", "male-ish", "maile", "mal", "male (cis)", "make", "male ", "man", "msle", "mail",
-                    "malr",
-                    "cis man", "Cis Male", "cis male"]
-        trans_str = ["trans-female", "something kinda male?", "queer/she/they", "non-binary", "nah", "all", "enby",
-                     "fluid",
-                     "genderqueer", "androgyne", "agender", "male leaning androgynous", "guy (-ish) ^_^", "trans woman",
-                     "neuter", "female (trans)", "queer", "ostensibly male, unsure what that really means"]
-        female_str = ["cis female", "f", "female", "woman", "femake", "female ", "cis-female/femme", "female (cis)",
-                      "femail"]
-
-        for (row, col) in train_df.iterrows():
-
-            if str.lower(col.Gender) in male_str:
-                train_df['Gender'].replace(to_replace=col.Gender, value='male', inplace=True)
-
-            if str.lower(col.Gender) in female_str:
-                train_df['Gender'].replace(to_replace=col.Gender, value='female', inplace=True)
-
-            if str.lower(col.Gender) in trans_str:
-                train_df['Gender'].replace(to_replace=col.Gender, value='trans', inplace=True)
+        train_df['work_interfere'].replace([np.nan], 'NA', inplace=True)
+        train_df['self_employed'].replace([np.nan], 'NA', inplace=True)
 
         # Get rid of gibberish
         stk_list = ['A little about you', 'p']
         train_df = train_df[~train_df['Gender'].isin(stk_list)]
 
-        train_df['Age'].fillna(train_df['Age'].median(), inplace=True)
-
-        # Fill with media() values < 18 and > 120
-        s = pd.Series(train_df['Age'])
-        s[s < 18] = train_df['Age'].median()
-        train_df['Age'] = s
-        s = pd.Series(train_df['Age'])
-        s[s > 120] = train_df['Age'].median()
-        train_df['Age'] = s
-
-        # Ranges of Age
-        train_df['age_range'] = pd.cut(train_df['Age'], [0, 20, 30, 65, 100],
-                                       labels=["0-20", "21-30", "31-65", "66-100"],
-                                       include_lowest=True)
-
-        train_df['self_employed'] = train_df['self_employed'].replace([defaultString], 'No')
-
-        train_df['work_interfere'] = train_df['work_interfere'].replace([defaultString], 'Don\'t know')
-
         # Encoding data
-        labelDict = {}
-        for feature in train_df:
-            le = preprocessing.LabelEncoder()
-            le.fit(train_df[feature])
-            le_name_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
-            train_df[feature] = le.transform(train_df[feature])
-            # Get labels
-            labelKey = 'label_' + feature
-            labelValue = [*le_name_mapping]
-            labelDict[labelKey] = labelValue
+        label_encoder = LabelEncoder()
+        for col in gv.dict_labels:
+            label_encoder.fit(gv.dict_labels[col])
+            train_df[col] = label_encoder.transform(train_df[col])
 
-        # Get rid of 'Country'
-        train_df = train_df.drop(['Country'], axis=1)
-
-        scaler = MinMaxScaler()
-        train_df['Age'] = scaler.fit_transform(train_df[['Age']])
-
-        feature_cols = ['Age', 'Gender', 'family_history', 'benefits', 'care_options', 'anonymity', 'leave',
-                        'work_interfere']
-        return train_df[feature_cols], train_df.treatment
+        return train_df.drop(['treatment'], axis=1), train_df.treatment
 
     def objective_value(self,x, y, chromosome):
         lb_x, ub_x = .1, 10
@@ -409,6 +338,7 @@ if df.__len__() > 0:
         try:
             df[item].replace({"Si": "Yes",
                               "Algunas veces": "Sometimes",
+                              "Mas de 1000": "More than 1000",
                               "Nunca": "Never",
                               "Frecuentemente": "Often",
                               "Raramente": "Rarely",
@@ -420,7 +350,7 @@ if df.__len__() > 0:
                               "Muy facil": "Very easy",
                               "Algunos de ellos": "Some of them",
                               "A lo mejor": "Maybe"
-                              },inplace=True)
+                              }, inplace=True)
         except TypeError:
             continue
 

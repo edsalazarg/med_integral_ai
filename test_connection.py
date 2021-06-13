@@ -1,8 +1,6 @@
 from sqlalchemy import create_engine
 import pandas as pd
 import global_var as gv
-import pickle
-from sklearn.preprocessing import MinMaxScaler, LabelEncoder
 import mysql.connector
 
 db_connection_str = 'mysql+pymysql://{}@{}/medintegral'.format(gv.USERNAME,gv.SERVER)
