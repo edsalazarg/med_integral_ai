@@ -18,7 +18,7 @@ from sklearn.preprocessing import LabelEncoder
 import pickle
 import global_var as gv
 
-class Psych_AI:
+class Diabetes_AI:
     def __init__(self, dataframe, population=20, prob_crsvr=1, prob_mutation=0.3, generations=1000):
         self.dataframe = dataframe
         self.x, self.y = self.parsing_df()
@@ -321,7 +321,7 @@ df = df.drop(columns=['created_at'])
 if df.__len__() > 0:
     test_df = pd.concat([train_df, df], ignore_index=True, sort=False)
 
-    objpo = Psych_AI(test_df,generations=1000)
+    objpo = Diabetes_AI(test_df,generations=1000)
 
 
 
