@@ -309,7 +309,7 @@ class Psych_AI:
         model = svm.SVC(kernel="rbf", C=final_solution_overall[0])
         model.fit(x_train, np.ravel(y_train))
 
-        filename = 'trained_model_psych_ai.sav'
+        filename = '/home/eduardo/ai_module/med_integral_ai/psych/trained_model_psych_ai.sav'
         pickle.dump(model, open(filename, 'wb'))
 
 
@@ -324,7 +324,7 @@ class Psych_AI:
 
         print("Accuracy: ", accuracy)
 
-train_df = pd.read_csv('../first_csvs/psych.csv')
+train_df = pd.read_csv('/home/eduardo/ai_module/med_integral_ai/first_csvs/psych.csv')
 
 db_connection_str = 'mysql+pymysql://{}@{}/medintegral'.format(gv.USERNAME,gv.SERVER)
 db_connection = create_engine(db_connection_str)

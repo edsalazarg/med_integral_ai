@@ -15,7 +15,7 @@ df = df.drop(columns=['created_at'])
 patients_ids = df.patient_id.values
 predict_df = df.drop(['patient_id'],axis=1)
 
-loaded_model = pickle.load(open('trained_model_diabetes_ai.sav', 'rb'))
+loaded_model = pickle.load(open('/home/eduardo/ai_module/med_integral_ai/diabetes/trained_model_diabetes_ai.sav', 'rb'))
 
 y_pred = loaded_model.predict(predict_df)
 

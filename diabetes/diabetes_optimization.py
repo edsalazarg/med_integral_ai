@@ -309,7 +309,7 @@ class Diabetes_AI:
 
         print("Accuracy: ", accuracy)
 
-train_df = pd.read_csv('../first_csvs/diabetes.csv')
+train_df = pd.read_csv('/home/eduardo/ai_module/med_integral_ai/first_csvs/diabetes.csv')
 
 db_connection_str = 'mysql+pymysql://{}@{}/medintegral'.format(gv.USERNAME,gv.SERVER)
 db_connection = create_engine(db_connection_str)

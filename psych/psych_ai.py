@@ -12,7 +12,7 @@ from sklearn.metrics import confusion_matrix, accuracy_score
 # Model
 from sklearn.svm import SVC
 
-train_df = pd.read_csv('../first_csvs/psych.csv')
+train_df = pd.read_csv('/home/eduardo/ai_module/med_integral_ai/first_csvs/psych.csv')
 
 train_df.drop(columns=['Timestamp', 'Country', 'state', 'comments'], inplace = True)
 
@@ -68,7 +68,7 @@ print(accuracy_score(y_test, y_pred))
 print('Train:', classifier.score(X_train,y_train))
 print('Test:', classifier.score(X_test,y_test))
 
-filename = 'trained_model_psych_ai.sav'
+filename = '/home/eduardo/ai_module/med_integral_ai/psych/trained_model_psych_ai.sav'
 try:
     os.remove(filename)
 except FileNotFoundError:

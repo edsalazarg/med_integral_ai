@@ -52,7 +52,7 @@ for col in gv.dict_labels:
         label_encoder.fit(gv.dict_labels[col])
         predict_df[col] = label_encoder.transform(predict_df[col])
 
-loaded_model = pickle.load(open('trained_model_psych_ai.sav', 'rb'))
+loaded_model = pickle.load(open('/home/eduardo/ai_module/med_integral_ai/psych/trained_model_psych_ai.sav', 'rb'))
 
 y_pred = loaded_model.predict(predict_df)
 
