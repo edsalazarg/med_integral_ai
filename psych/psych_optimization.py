@@ -355,6 +355,8 @@ if df.__len__() > 0:
     test_df = pd.concat([train_df, df], ignore_index=True, sort=False)
 
     objpo = Psych_AI(test_df,generations=1000)
+else:
+    print("No new records to train with")
 
 
 
