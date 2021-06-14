@@ -353,6 +353,9 @@ if df.__len__() > 0:
         except TypeError:
             continue
 
+    df['treatment'].replace(1, 'Yes', inplace = True)
+    df['treatment'].replace(0, 'No', inplace=True)
+
     test_df = pd.concat([train_df, df], ignore_index=True, sort=False)
 
     objpo = Psych_AI(test_df,generations=1000)
