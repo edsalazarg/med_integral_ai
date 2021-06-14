@@ -71,7 +71,7 @@ class Psych_AI:
         return train_df.drop(['treatment'], axis=1), train_df.treatment
 
     def objective_value(self,x, y, chromosome):
-        lb_x, ub_x = .1, 10
+        lb_x, ub_x = .5, 1.5
         len_x = (len(chromosome) // 2)
 
         precision_x = (ub_x - lb_x) / ((2 ** len_x) - 1)
@@ -281,8 +281,6 @@ class Psych_AI:
         sorted_last_population[:, 0] = 1 - (sorted_last_population[:, 0])
         sorted_best_of_a_generation[:, 0] = (sorted_best_of_a_generation[:, 0])
 
-        best_string_convergence = sorted_last_population[0]
-
         best_string_overall = sorted_best_of_a_generation[0]
 
         print()
@@ -356,7 +354,7 @@ if df.__len__() > 0:
 
     test_df = pd.concat([train_df, df], ignore_index=True, sort=False)
 
-    objpo = Psych_AI(train_df,generations=1000)
+    objpo = Psych_AI(test_df,generations=50)
 
 
 
