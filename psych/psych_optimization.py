@@ -38,9 +38,6 @@ class Psych_AI:
         train_df.drop(train_df[train_df['Age'] > 100].index, inplace=True)
         train_df['Age'].unique()
 
-        treatments = train_df.treatment
-        train_df = train_df.drop(['treatment'], axis=1)
-
         train_df.isnull().sum().max()
 
         train_df['Gender'].replace(['Male ', 'male', 'M', 'm', 'Male', 'Cis Male',
@@ -72,7 +69,7 @@ class Psych_AI:
             label_encoder.fit(gv.dict_labels[col])
             train_df[col] = label_encoder.transform(train_df[col])
 
-        return train_df, treatments
+        return train_df.drop(columns=['treatment']), train_df.treatment
 
     def objective_value(self,x, y, chromosome):
         lb_x, ub_x = .5, 1.5

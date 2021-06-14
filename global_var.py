@@ -9,7 +9,7 @@ dict_labels = {
     'Gender': ['female', 'male','other'],
     'self_employed': ['NA', 'Yes', 'No'],
     'family_history': ['No', 'Yes'],
-    'treatment': ['Yes', 'No'],
+    'treatment': ['No', 'Yes'],
     'work_interfere': ['Often', 'Rarely', 'Never', 'Sometimes', 'NA'],
     'no_employees': ['6-25', 'More than 1000', '26-100', '100-500', '1-5', '500-1000'],
     'remote_work': ['No', 'Yes'],
