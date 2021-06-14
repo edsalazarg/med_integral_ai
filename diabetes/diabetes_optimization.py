@@ -290,7 +290,7 @@ class Diabetes_AI:
         model = svm.SVC(kernel="rbf", C=final_solution_overall[0])
         model.fit(x_train, np.ravel(y_train))
 
-        filename = 'trained_model_diabetes_ai.sav'
+        filename = '/home/eduardo/ai_module/med_integral_ai/diabetes/trained_model_diabetes_ai.sav'
         pickle.dump(model, open(filename, 'wb'))
 
 
