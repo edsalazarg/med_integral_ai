@@ -65,7 +65,6 @@ class Psych_AI:
         # Encoding data
         label_encoder = LabelEncoder()
         for col in gv.dict_labels:
-            print(col)
             label_encoder.fit(gv.dict_labels[col])
             train_df[col] = label_encoder.transform(train_df[col])
 
@@ -353,8 +352,7 @@ if df.__len__() > 0:
         except TypeError:
             continue
 
-    df['treatment'].replace(1, 'Yes', inplace = True)
-    df['treatment'].replace(0, 'No', inplace=True)
+    df['treatment'].replace({'1': 'Yes','0': 'No'}, inplace =True)
 
     test_df = pd.concat([train_df, df], ignore_index=True, sort=False)
 
