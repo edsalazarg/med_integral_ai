@@ -4,6 +4,7 @@ Created on Sat Dec  5 13:30:29 2020
 
 @author: edsal
 """
+import os
 
 import numpy as np
 import pandas as pd
@@ -310,6 +311,10 @@ class Psych_AI:
         model.fit(x_train, np.ravel(y_train))
 
         filename = '/home/eduardo/ai_module/med_integral_ai/psych/trained_model_psych_ai.sav'
+        try:
+            os.remove(filename)
+        except FileNotFoundError:
+            print("Previous model file dont exists")
         pickle.dump(model, open(filename, 'wb'))
 
 

@@ -14,7 +14,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from sklearn import svm
-from sklearn.preprocessing import LabelEncoder
+import os
 import pickle
 import global_var as gv
 
@@ -291,6 +291,10 @@ class Diabetes_AI:
         model.fit(x_train, np.ravel(y_train))
 
         filename = '/home/eduardo/ai_module/med_integral_ai/diabetes/trained_model_diabetes_ai.sav'
+        try:
+            os.remove(filename)
+        except FileNotFoundError:
+            print("Previous model file dont exists")
         pickle.dump(model, open(filename, 'wb'))
 
 
@@ -322,6 +326,8 @@ if df.__len__() > 0:
     test_df = pd.concat([train_df, df], ignore_index=True, sort=False)
 
     objpo = Diabetes_AI(test_df,generations=1000)
+else:
+    print("No new records to train with")
 
 
 
