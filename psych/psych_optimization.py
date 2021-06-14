@@ -42,18 +42,18 @@ class Psych_AI:
 
         train_df['Gender'].replace(['Male ', 'male', 'M', 'm', 'Male', 'Cis Male',
                                     'Man', 'cis male', 'Mail', 'Male-ish', 'Male (CIS)',
-                                    'Cis Man', 'msle', 'Malr', 'Mal', 'maile', 'Make', ], 'male', inplace=True)
+                                    'Cis Man', 'msle', 'Malr', 'Mal', 'maile', 'Make', 'MALE'], 'male', inplace=True)
 
         train_df['Gender'].replace(['Female ', 'female', 'F', 'f', 'Woman', 'Female',
                                     'femail', 'Cis Female', 'cis-female/femme', 'Femake', 'Female (cis)',
-                                    'woman', ], 'female', inplace=True)
+                                    'woman', 'FEMALE'], 'female', inplace=True)
 
         train_df["Gender"].replace(['Female (trans)', 'queer/she/they', 'non-binary',
                                     'fluid', 'queer', 'Androgyne', 'Trans-female', 'male leaning androgynous',
                                     'Agender', 'A little about you', 'Nah', 'All',
                                     'ostensibly male, unsure what that really means',
                                     'Genderqueer', 'Enby', 'p', 'Neuter', 'something kinda male?',
-                                    'Guy (-ish) ^_^', 'Trans woman', ], 'other', inplace=True)
+                                    'Guy (-ish) ^_^', 'Trans woman', 'OTHER'], 'other', inplace=True)
 
         train_df['work_interfere'].replace([np.nan], 'NA', inplace=True)
         train_df['self_employed'].replace([np.nan], 'NA', inplace=True)
