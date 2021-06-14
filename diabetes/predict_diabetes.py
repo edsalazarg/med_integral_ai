@@ -20,6 +20,7 @@ loaded_model = pickle.load(open('/home/eduardo/ai_module/med_integral_ai/diabete
 y_pred = loaded_model.predict(predict_df)
 
 df_pred = pd.DataFrame(y_pred, columns=["predictions"])
+df_pred = df_pred.astype('int')
 
 df_pred.insert(0, "patient_id", patients_ids, True)
 
